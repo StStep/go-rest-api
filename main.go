@@ -19,7 +19,13 @@ type Address struct {
 	State string `json:"state,omitempty"`
 }
 
+type Status struct {
+	PeopleNumber int `json:"peoplenumber,omitempty"`
+	Status string `json:"status,omitempty"`
+}
+
 var people []Person
+var status Status
 
 // our main function
 func main() {
@@ -27,11 +33,15 @@ func main() {
 	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &Address{City: "City X", State: "State X"}})
 	people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &Address{City: "City Z", State: "State Y"}})
 	people = append(people, Person{ID: "3", Firstname: "Francis", Lastname: "Sunday"})
+	status = Status{len(people), "Ready"}
+	router.HandleFunc("/", GetStatus).Methods("GET")
 	router.HandleFunc("/people", GetPeople).Methods("GET")
 	router.HandleFunc("/people/{id}", GetPerson).Methods("GET")
-	router.HandleFunc("/people/{id}", CreatePerson).Methods("POST")
-	router.HandleFunc("/people/{id}", DeletePerson).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8080", router))
+}
+
+func GetStatus(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(status)
 }
 
 func GetPeople(w http.ResponseWriter, r *http.Request) {
@@ -49,5 +59,3 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&Person{})
 }
 
-func CreatePerson(w http.ResponseWriter, r *http.Request) {}
-func DeletePerson(w http.ResponseWriter, r *http.Request) {}
