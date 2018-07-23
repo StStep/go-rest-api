@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"log"
+	"github.com/gorilla/handlers"
+	"os"
 	"net/http"
 )
 
@@ -37,7 +38,7 @@ func main() {
 	router.HandleFunc("/", GetStatus).Methods("GET")
 	router.HandleFunc("/people", GetPeople).Methods("GET")
 	router.HandleFunc("/people/{id}", GetPerson).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, router))
 }
 
 func GetStatus(w http.ResponseWriter, r *http.Request) {
