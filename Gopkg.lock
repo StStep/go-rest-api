@@ -2,6 +2,30 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:6d6d9309d10d5dffaaf3a56c4b2570dec62152f978ac3566b13bdfafd63f32fb"
+  name = "github.com/aead/chacha20"
+  packages = ["chacha"]
+  pruneopts = "UT"
+  revision = "8b13a72661dae6e9e5dea04f344f0dc95ea29547"
+
+[[projects]]
+  branch = "master"
+  digest = "1:13c056cb8b3db5741aaaf8b91f7cbd0f2ff0d44b2448744852896c92dd0bad84"
+  name = "github.com/aead/chacha20poly1305"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "233f39982aeb502bfca81558666747bec91cf00c"
+
+[[projects]]
+  branch = "master"
+  digest = "1:82df2686fe2e0cc2894fbec00098fe2efeacbda08af8087a86d9eeea58699d49"
+  name = "github.com/aead/poly1305"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3fee0db0b63511234f7230da50b72414f6258f10"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -25,12 +49,42 @@
   revision = "e3702bed27f0d39777b0b37b664b6280e8ef8fbf"
   version = "v1.6.2"
 
+[[projects]]
+  digest = "1:cc1dc0067040f497b5e8dc8ec58517d6b50e167386f6e1106edfaa78038da357"
+  name = "github.com/o1egl/paseto"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c415efaa3602cca710a5ea40288b0af91c64a285"
+  version = "v0.2.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:2d5f6194bad7e3e1116606245a9eb9bc35dd5fd34949cb124fc75867342d1c1b"
+  name = "golang.org/x/crypto"
+  packages = [
+    "blake2b",
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "hkdf",
+  ]
+  pruneopts = "UT"
+  revision = "c126467f60eb25f8f27e5a981f32a87e3965053f"
+
+[[projects]]
+  branch = "master"
+  digest = "1:8392490b249a3602a13813be12324d3b16eca044ae185ff32cdd9e267706e208"
+  name = "golang.org/x/sys"
+  packages = ["cpu"]
+  pruneopts = "UT"
+  revision = "e072cadbbdc8dd3d3ffa82b8b4b9304c261d9311"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/gorilla/handlers",
     "github.com/gorilla/mux",
+    "github.com/o1egl/paseto",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
