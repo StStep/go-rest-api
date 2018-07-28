@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"errors"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
@@ -69,10 +70,34 @@ func makeToken() (string, error) {
 	jsonToken.Set("data", "this is a signed message")
 	footer := "some footer"
 
-	v2 := paseto.NewV2()
-
 	// Encrypt data
-	return v2.Encrypt(symmetricKey, jsonToken, paseto.WithFooter(footer))
+	return paseto.NewV2().Encrypt(symmetricKey, jsonToken, paseto.WithFooter(footer))
+}
+
+func verifyToken(token string) error {
+	var jsonToken paseto.JSONToken
+	var footer string
+	err := paseto.NewV2().Decrypt(token, symmetricKey, &jsonToken, &footer)
+	if err != nil {
+		return err
+	}
+
+	if time.Now().After(jsonToken.Expiration) {
+		err = errors.New("Token has expired")
+	}
+	if jsonToken.Issuer != "test_service" {
+		err = errors.New("Unknown service " + jsonToken.Issuer)
+	}
+
+	return err
+}
+
+func authRequest(r *http.Request) bool {
+	u, p, b := r.BasicAuth()
+	if !b || u != "token" {
+		return false;
+	}
+	return verifyToken(p) == nil
 }
 
 func getHome(w http.ResponseWriter, r *http.Request) {
@@ -92,10 +117,18 @@ func postLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPeople(w http.ResponseWriter, r *http.Request) {
+	if !authRequest(r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	json.NewEncoder(w).Encode(people)
 }
 
 func GetPerson(w http.ResponseWriter, r *http.Request) {
+	if !authRequest(r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	params := mux.Vars(r)
 	for _, item := range people {
 		if item.ID == params["id"] {
