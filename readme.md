@@ -1,3 +1,3 @@
-# Testing Go and REST API
+# Testing Go usage as a server
 
-Exmaple project see [Building A Restful API](https://www.codementor.io/codehakase/building-a-restful-api-with-golang-a6yivzqdo)
+TODO

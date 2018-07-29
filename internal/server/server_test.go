@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
         "net/http"
@@ -6,10 +6,12 @@ import (
         "time"
 	"io/ioutil"
 	"encoding/json"
+
+	"github.com/ststep/go-test-server/internal/auth"
 )
 
 func TestGetHome(t *testing.T) {
-        go startServer()
+        go Start()
         client := &http.Client{
                 Timeout: 1 * time.Second,
         }
@@ -40,7 +42,7 @@ func TestGetHome(t *testing.T) {
 }
 
 func TestPostLogin(t *testing.T) {
-        go startServer()
+        go Start()
         client := &http.Client{
                 Timeout: 1 * time.Second,
         }
@@ -70,7 +72,7 @@ func TestPostLogin(t *testing.T) {
                 panic(err)
         }
 	token := string(respData)
-	err = verifyToken(token)
+	err = auth.VerifyToken(token)
         if err != nil {
 		t.Errorf("Received token is invalid with error: %v", err)
         }
@@ -84,16 +86,4 @@ func TestPostLogin(t *testing.T) {
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("%v failed authorization with valid token", r_people.URL)
 	}
-}
-
-func TestVerifyToken(t *testing.T) {
-	tok, err := makeToken()
-        if err != nil {
-                panic(err)
-        }
-
-	err = verifyToken(tok)
-        if err != nil {
-		t.Errorf("Token is invalid with error: %v", err)
-        }
 }
