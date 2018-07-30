@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"time"
-	"net/http"
 	"errors"
 	"github.com/o1egl/paseto"
+	"net/http"
+	"time"
 )
 
 var symmetricKey = []byte("YELLOW SUBMARINE, BLACK WIZARDRY")
@@ -52,7 +52,7 @@ func VerifyToken(token string) error {
 func AuthRequest(r *http.Request) bool {
 	u, p, b := r.BasicAuth()
 	if !b || u != "token" {
-		return false;
+		return false
 	}
 	return VerifyToken(p) == nil
 }

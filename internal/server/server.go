@@ -1,13 +1,13 @@
 package server
 
 import (
-	"fmt"
 	"encoding/json"
-	"os"
+	"fmt"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/handlers"
+	"os"
 
 	"github.com/ststep/go-test-server/internal/auth"
 )
@@ -25,8 +25,8 @@ type Address struct {
 }
 
 type Status struct {
-	PeopleNumber int `json:"peoplenumber,omitempty"`
-	Status string `json:"status,omitempty"`
+	PeopleNumber int    `json:"peoplenumber,omitempty"`
+	Status       string `json:"status,omitempty"`
 }
 
 var people []Person
@@ -46,14 +46,13 @@ func Start() {
 	log.Fatal(http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, router)))
 }
 
-
 func getHome(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(status)
 }
 
 func postLogin(w http.ResponseWriter, r *http.Request) {
 	token, err := auth.MakeToken()
-	if  err != nil {
+	if err != nil {
 		fmt.Println("Failed to generate token with error " + err.Error())
 		w.WriteHeader(http.StatusNotFound)
 	} else {
