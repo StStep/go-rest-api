@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"os"
+	"log"
 	"net/http"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
@@ -42,7 +43,7 @@ func Start() {
 	router.HandleFunc("/login", postLogin).Methods("POST")
 	router.HandleFunc("/people", getPeople).Methods("GET")
 	router.HandleFunc("/people/{id}", getPerson).Methods("GET")
-	http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, router))
+	log.Fatal(http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, router)))
 }
 
 
