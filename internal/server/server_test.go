@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ststep/go-test-server/internal/auth"
+	"github.com/StStep/go-test-server/internal/auth"
 )
 
 func TestGetHome(t *testing.T) {

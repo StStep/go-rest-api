@@ -9,6 +9,7 @@ vendor*
 *.dll
 *.so
 *.dylib
+runServer
 
 # Test binary, build with `go test -c`
 *.test

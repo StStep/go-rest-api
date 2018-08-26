@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ststep/go-test-server/internal/auth"
+	"github.com/StStep/go-test-server/internal/auth"
 )
 
 type Person struct {

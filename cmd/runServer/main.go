@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ststep/go-test-server/internal/server"
+	"github.com/StStep/go-test-server/internal/server"
 )
 
 // our main function
