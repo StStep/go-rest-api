@@ -1,4 +1,4 @@
-BINARY=runServer.exe
+BINARY=runServer
 
 all: test build
 build:
