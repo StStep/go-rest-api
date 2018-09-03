@@ -11,7 +11,9 @@ import (
 )
 
 func TestGetHome(t *testing.T) {
-	go Start()
+	// Setup
+	svr := Start()
+
 	client := &http.Client{
 		Timeout: 1 * time.Second,
 	}
@@ -20,6 +22,7 @@ func TestGetHome(t *testing.T) {
 
 	resp, err := client.Do(r)
 	if err != nil {
+		svr.Close()
 		panic(err)
 	}
 	if resp.StatusCode != http.StatusOK {
@@ -29,6 +32,7 @@ func TestGetHome(t *testing.T) {
 	// Decode Body
 	var st Status
 	if json.NewDecoder(resp.Body).Decode(&st) != nil {
+		svr.Close()
 		panic(err)
 	}
 
@@ -39,10 +43,15 @@ func TestGetHome(t *testing.T) {
 	if st.PeopleNumber != 3 {
 		t.Errorf("PeopleNumber is %v not %v", st.PeopleNumber, 3)
 	}
+
+	// Tear-down
+	svr.Close()
 }
 
 func TestPostLogin(t *testing.T) {
-	go Start()
+	// Setup
+	svr := Start()
+
 	client := &http.Client{
 		Timeout: 1 * time.Second,
 	}
@@ -53,6 +62,7 @@ func TestPostLogin(t *testing.T) {
 	// requesting people should fail before logging in
 	resp, err := client.Do(r_people)
 	if err != nil {
+		svr.Close()
 		panic(err)
 	}
 	if resp.StatusCode != http.StatusUnauthorized {
@@ -62,6 +72,7 @@ func TestPostLogin(t *testing.T) {
 	// Posting login should return valid token
 	resp, err = client.Do(p_login)
 	if err != nil {
+		svr.Close()
 		panic(err)
 	}
 	if resp.StatusCode != http.StatusOK {
@@ -69,6 +80,7 @@ func TestPostLogin(t *testing.T) {
 	}
 	respData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		svr.Close()
 		panic(err)
 	}
 	token := string(respData)
@@ -81,9 +93,13 @@ func TestPostLogin(t *testing.T) {
 	r_people.SetBasicAuth("token", token)
 	resp, err = client.Do(r_people)
 	if err != nil {
+		svr.Close()
 		panic(err)
 	}
 	if resp.StatusCode != http.StatusOK {
 		t.Errorf("%v failed authorization with valid token", r_people.URL)
 	}
+
+	// Tear-down
+	svr.Close()
 }

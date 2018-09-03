@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"os"
 
@@ -32,18 +31,28 @@ type Status struct {
 var people []Person
 var status Status
 
-func Start() {
-	router := mux.NewRouter()
+func Start() *http.Server {
+
+	// Setup test data
 	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe", Address: &Address{City: "City X", State: "State X"}})
 	people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe", Address: &Address{City: "City Z", State: "State Y"}})
 	people = append(people, Person{ID: "3", Firstname: "Francis", Lastname: "Sunday"})
 	status = Status{len(people), "Ready"}
 
+	// Setup router
+	router := mux.NewRouter()
 	router.HandleFunc("/", getHome).Methods("GET")
 	router.HandleFunc("/login", postLogin).Methods("POST")
 	router.HandleFunc("/people", getPeople).Methods("GET")
 	router.HandleFunc("/people/{id}", getPerson).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8080", handlers.LoggingHandler(os.Stdout, router)))
+
+	// Create and start server
+	srv := &http.Server{Addr: ":8080", Handler: handlers.LoggingHandler(os.Stdout, router)}
+	go func() {
+		srv.ListenAndServe()
+	}()
+
+	return srv
 }
 
 func getHome(w http.ResponseWriter, r *http.Request) {
